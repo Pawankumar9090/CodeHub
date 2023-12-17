@@ -1,0 +1,271 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using System.Web;
+@model Answer
+@inject UserManager<UserAccounts> UserManager
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+@{
+    var selectedQ = ViewData["selectedQ"] as Questions;
+    var loginuser = UserManager.FindByIdAsync(UserManager.GetUserId(User)).Result;
+    if (loginuser == null)
+    {
+        loginuser = new UserAccounts();
+    }
+
+}
+<section class="section dashboard">
+    <div class="row">
+        <!-- Left side columns -->
+        <div class="col-lg-8">
+            <div class="row">
+                <div align="right" class="mb-3">
+                    <form asp-action="RaiseQuestion" asp-controller="QuestionsManage">
+                        <button type="submit" class="btn btn-success">Ask Question</button>
+                    </form>
+                </div>
+                <!-- Customers Card -->
+                <div class="col-xxl-4 col-xl-12">
+                    <div class="card info-card customers-card">
+                        <div class="card-body">
+                            @if (selectedQ != null)
+                            {
+                                <div class="row">
+                                    <h5 class="card-title">Q. @selectedQ.Question </h5>
+                                    <span style="margin-left:10px; margin-top:-18px;">@selectedQ.QDescriptio</span>
+                                </div>
+                                <div class="d-flex" style="float: right;">
+                                    <span class="btn-link active"><a >@selectedQ.UserName</a>  </span>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="row">
+                                    <h5 class="card-title text-danger" align="center">Not Found Any Question! </h5>
+                                    <span align="center" style="font-size:13px;">Click on <b> Ask Question</b> and Raise a new Question </span>
+                                </div>
+                                <div class="d-flex" style="float: right;"><br>  
+                                    <span class="btn-link active"></span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div><!-- End Customers Card -->
+                <!-- Customers Card -->
+                @{
+                    var selectedQ_A = ViewData["selectedQ_A"] as IList<Answer>;
+                }
+                @if (selectedQ != null)
+                {
+                    if(selectedQ_A!=null && selectedQ_A.Count >0)
+                    {
+                        foreach(var item in selectedQ_A)
+                        {                            
+                            <div class="col-xxl-4 col-xl-12">
+                                <div class="card info-card customers-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"></h5>
+                                        <div class="row">
+                                            <div class="col-md-1">
+                                                <div class="row">
+                                                    <input id="ansid" type="hidden" value="@item.AnsId" />
+                                                    <input id="vote" type="hidden" value="1" />
+                                                    <a id="voteadd"><i class="bi bi-caret-up-square"></i></a>
+                                                </div>
+                                                <div id="votes" class="row">&nbsp;&nbsp;&nbsp;@item.Vote</div>
+                                                <div class="row">
+                                                    <input id="ansid1" type="hidden" value="@item.AnsId" />
+                                                    <input id="vote1" type="hidden" value="-1" />
+                                                    <a id="votesub"><i class="bi bi-caret-down-square"></i></a>
+                                                </div>
+                                            </div>
+                                            <div  class="col-md-9">
+                                                
+                                                <p>@item.ADiscription</p>
+                                                @* <input id="gethtmlcode" type="hidden" value="@item.Answers" name="myinput"/>   *@                                                                                                
+                                                <div id="appendhtml" style="width:100%; height:150px; overflow: scroll; padding:20px; background: rgba(205, 204, 204, 0.41); border: 1px solid #ccc;">
+                                                    <table>
+                                                        @Html.Raw(item.Answers)
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex" style="float: right;">
+                                            <span class="btn-link active">@item.UserName</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- End Customers Card -->
+                            @* <div class="card info-card customers-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Code</h5>
+                                    <textarea readonly class="form-control" ></textarea>
+                                </div>
+                            </div> *@
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-xxl-4 col-xl-12">
+                            <div class="card info-card customers-card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <h5 class="card-title text-danger" align="center">Not Found Any Answer! </h5>
+                                        <span align="center" style="font-size:13px;">Add your Answer below <i class="bi bi-arrow-down"></i></span>
+                                    </div>
+                                    <div class="d-flex" style="float: right;">
+                                        <br>
+                                        <span class="btn-link active"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Submit your Answer :</h5>
+                            <!-- Vertical Form -->
+                            <div class="col-12">
+                                <textarea id="edittextarea" name="editor_input" required></textarea>
+                            </div>
+                            <form class="row g-3" method="post" asp-action="GetSelectedLangQ" asp-controller="QuestionsManage">
+                                <div class="col-12 mt-5">
+                                    <label asp-for="ADiscription" for="inputNanme4" class="form-label">Answer Discription</label>
+                                    <textarea asp-for="ADiscription" type="text" class="form-control" id="inputNanme4"></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label asp-for="Answers" for="edittextarea" class="form-label" hidden>Enter Code</label>
+                                    <input type="hidden" asp-for="Answers"  id="textareatext"/>                                    
+                                </div>
+                               
+                                <input asp-for="QId" type="hidden" value="@selectedQ.QId" />
+                                <input asp-for="UserName" type="hidden" value="@loginuser.Name" />
+                                <input asp-for="UserId" type="hidden" value="@loginuser.Id" />
+                                <input asp-for="AnsTage" type="hidden" value="@selectedQ.QuestionTage" />
+                                @* <div class="col-12">
+                                    <label for="floatingSelect" class="form-label">Select Language</label>
+                                    <select class="form-select" id="floatingSelect" aria-label="Floating label select example">                                    
+                                        <option value="">-</option>
+                                        <option value="java">java</option>
+                                        <option value="c++">C++</option>
+                                        <option value="c#">C#</option>
+                                        <option value="python">python</option>
+                                        <option value="html">html</option>
+                                        <option value="css">css</option>
+                                        <option value="java script">java script</option>
+                                        <option value="dbms">dbms</option>
+                                        <option value="ajex">ajex</option>
+                                    </select>
+                                </div> *@
+                                <div class="text-left">
+                                    <button id="checktextarea"  type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form><!-- Vertical Form -->
+                        </div>
+                    </div>
+                
+                }
+            </div>
+        </div><!-- End Left side columns -->
+        <!-- Right side columns -->
+        @{
+            var selectedlangQ = ViewData["selectedLangQ"] as IList<Questions>;
+            var sno = 1;
+        }
+        <div class="col-lg-4">
+            <!-- Recent Activity -->
+            <div class="card" style="margin-top: 55px;">
+                <div class="card-body">
+                    @if (selectedQ != null)
+                    {
+                        <h5 class="card-title">Questions<span class="font-monospace"> (@selectedQ.QuestionTage)</span> </h5>
+                    }
+                    else
+                    {
+                        <h5 class="card-title">Questions</h5>
+                    }
+                    <hr>
+                    <div class="activity">
+                        @if (selectedlangQ != null && selectedlangQ.Count != 0)
+                        {
+                            foreach (var item in selectedlangQ)
+                            {
+                                <div class="activity-item d-flex mb-2"><a asp-action="GetSelectedLangQ" asp-controller="QuestionsManage" asp-route-QId="@item.QId" asp-route-QuestionTage="@item.QuestionTage" asp-route-UserId="@item.UserId">@sno. @item.Question </a></div>
+                                sno++;
+                            }
+                        }
+                        else
+                        {
+                            <div class="activity-item d-flex mb-2">No Any Raise Question</div>
+                        }
+
+                    </div>
+                </div>
+            </div><!-- End Recent Activity -->
+        </div><!-- End Right side columns -->
+    </div>
+</section>
+@section Scripts {
+<script>
+    tinymce.init({ selector: '#edittextarea' });
+    $('#checktextarea').on('click', function () {
+        console.log(tinymce.activeEditor.getContent({ format: 'html' }));
+        document.getElementById("textareatext").value = tinymce.activeEditor.getContent({ format: 'html' });
+    });
+    $(document).on('click','#voteadd', function () {
+            let ansid = Number($(this).parent().find('#ansid').val());
+            let vote = Number($(this).parent().find('#vote').val());
+            let votes = $(this).parent().parent().find('#votes');
+        // let votes = document.getElementById('votes');
+            const obj={
+                ansid:ansid,
+                vote:vote
+            };         
+ 
+        $.ajax({
+            type: "POST",
+            url: "VotingMethod",
+            data: obj,
+            // contentType: false,
+            // cache: false,
+            // processData: false,
+            success: function (ok) {                
+                //console.log(userDetails)
+                    votes.html("&nbsp;&nbsp;&nbsp;" + ok);
+                    console.log(ok,votes);
+            },
+            error: function () {
+                console.log(error);
+            }
+        });
+    });
+        $(document).on('click', '#votesub', function () {
+            let ansid = $(this).parent().find('#ansid1').val();
+            let vote = $(this).parent().find('#vote1').val();
+            let votes = $(this).parent().parent().find('#votes');
+
+            const obj = {
+                ansid: ansid,
+                vote: vote
+            };
+            
+            $.ajax({
+                type: "POST",
+                url: "VotingMethod",
+                data: obj,
+                // contentType: false,
+                // cache: false,
+                // processData: false,
+                success: function (ok) {
+                    //console.log(userDetails)
+                    votes.html("&nbsp;&nbsp;&nbsp;" + ok);  
+                    console.log(ok);
+                },
+                error: function () {
+                    console.log(error);
+                }
+            });
+        });
+
+            // let htmlcode = document.getElementById('gethtmlcode').value;
+    // document.getElementById("appendhtml").insertAdjacentHTML('beforeend',htmlcode);
+</script>
+}

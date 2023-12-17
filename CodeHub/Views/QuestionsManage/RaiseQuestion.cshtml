@@ -1,0 +1,55 @@
+﻿@model Questions
+
+<section class="section dashboard">
+    <div class="row">
+        <!-- Left side columns -->
+        <div class="col-lg-12">
+            <div class="row">
+                <!-- Customers Card -->
+                <div class="col-xxl-4 col-xl-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Raise Question</h5>
+                            <!-- Vertical Form -->
+                            <form class="row g-3" asp-action="RaiseQuestion" asp-controller="QuestionsManage">
+                                <div class="col-12">
+                                    <label asp-for="Question" for="inputNanme4" class="form-label">Your Question</label>
+                                    <textarea asp-for="Question" class="form-control" id="inputNanme4" style="height: 100px" aria-required="true"></textarea>
+                                    <span asp-validation-for="Question" class="text-danger"></span>
+                                </div>
+                                <div class="col-12">
+                                    <label asp-for="QDescriptio" for="inputNanme4" class="form-label">Question Defination</label>
+                                    <textarea asp-for="QDescriptio" class="form-control" id="inputNanme4" style="height: 100px"></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label asp-for="QuestionTage" for="floatingSelect" class="form-label">Select Language</label>
+                                    <select asp-for="QuestionTage" class="form-select" id="floatingSelect" aria-label="Floating label select example" required>
+                                        <option value="">-</option>
+                                        <option value="java">java</option>
+                                        <option value="c++">C++</option>
+                                        <option value="c#">C#</option>
+                                        <option value="python">python</option>
+                                        <option value="html">html</option>
+                                        <option value="css">css</option>
+                                        <option value="java script">java script</option>
+                                        <option value="dbms">dbms</option>
+                                        <option value="ajex">ajex</option>                                        
+                                    </select>
+                                    <span asp-validation-for="QuestionTage" class="text-danger"></span>
+                                </div>
+                                <div class="text-left">
+                                    <button type="submit" class="btn btn-primary">Submit</button>                                   
+                                </div>
+                            </form><!-- Vertical Form -->
+                        </div>
+                    </div>
+                </div><!-- End Customers Card -->
+                <!-- Customers Card -->
+            </div>
+        </div><!-- End Left side columns -->           
+    </div>
+</section>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
