@@ -283,3 +283,4 @@ C:\Users\User\Desktop\College Work\CodeHub\CodeHub\obj\Debug\net6.0\refint\CodeH
 C:\Users\User\Desktop\College Work\CodeHub\CodeHub\obj\Debug\net6.0\CodeHub.pdb
 C:\Users\User\Desktop\College Work\CodeHub\CodeHub\obj\Debug\net6.0\CodeHub.genruntimeconfig.cache
 C:\Users\User\Desktop\College Work\CodeHub\CodeHub\obj\Debug\net6.0\ref\CodeHub.dll
+C:\Users\User\Desktop\College Work\CodeHub\CodeHub\obj\Debug\net6.0\CodeHub.sourcelink.json

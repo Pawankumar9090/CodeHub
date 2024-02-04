@@ -107,6 +107,7 @@ namespace CodeHub.Controllers
         [HttpPost]
         public  int VotingMethod(int ansid,int vote)
         {
+            
             var userid=_userManager.GetUserId(HttpContext.User);
             var gg=_dbContext.Voting.Where(x => x.UserId == userid && x.AnsId == ansid).ToList().Count;
             if (userid != null)
